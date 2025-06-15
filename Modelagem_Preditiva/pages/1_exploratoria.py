@@ -28,6 +28,9 @@ st.write(df.isnull().sum())
 st.subheader("Estatísticas Descritivas")
 st.write(df.describe(include='all'))
 
+st.write(df.columns.tolist())
+
+
 # Para facilitar análise, pivotar os dados de "Variável" e "Valor"
 df_pivot = df.pivot_table(index=["DataHora", "Zona", "Status"], columns="Variavel", values="Valor").reset_index()
 
