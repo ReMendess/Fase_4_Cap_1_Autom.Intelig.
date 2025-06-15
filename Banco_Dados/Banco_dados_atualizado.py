@@ -94,6 +94,29 @@ def inserir_sensor_potassio(potassio_registrado: float, status_sensor: str, loc_
     )
     conn.commit()
 
+# Novas funções de inserção para as novas tabelas
+def inserir_sensor_temperatura(temperatura: float, status_sensor: str, loc_sensor: str):
+    data_hora = datetime.now()
+    cursor.execute(
+        """
+        INSERT INTO SENSOR_TEMPERATURA (Temperatura_registrada, data_hora, status_sensor, loc_sensor)
+        VALUES (:1, :2, :3, :4)
+        """,
+        (temperatura, data_hora, status_sensor, loc_sensor),
+    )
+    conn.commit()
+
+def inserir_sensor_umidade(umidade: float, status_sensor: str, loc_sensor: str):
+    data_hora = datetime.now()
+    cursor.execute(
+        """
+        INSERT INTO SENSOR_UMIDADE (Umidade_registrada, data_hora, status_sensor, loc_sensor)
+        VALUES (:1, :2, :3, :4)
+        """,
+        (umidade, data_hora, status_sensor, loc_sensor),
+    )
+    conn.commit()
+
 
 # ---------------------------------------------------------------------------
 
@@ -145,6 +168,29 @@ def atualizar_sensor_potassio(id_sensor_potassio: int, novo_valor: float):
     )
     conn.commit()
 
+# Novas funções de atualização para as novas tabelas
+def atualizar_sensor_temperatura(id_sensor: int, novo_valor: float):
+    cursor.execute(
+        """
+        UPDATE SENSOR_TEMPERATURA
+        SET Temperatura_registrada = :1
+        WHERE id_sensor_temperatura = :2
+        """,
+        (novo_valor, id_sensor),
+    )
+    conn.commit()
+
+def atualizar_sensor_umidade(id_sensor: int, novo_valor: float):
+    cursor.execute(
+        """
+        UPDATE SENSOR_UMIDADE
+        SET Umidade_registrada = :1
+        WHERE id_sensor_umidade = :2
+        """,
+        (novo_valor, id_sensor),
+    )
+    conn.commit()
+
 
 # ---------------------------------------------------------------------------
 
@@ -168,6 +214,16 @@ def remover_sensor_potassio(id_sensor_potassio: int):
         "DELETE FROM SENSOR_POTASSIO WHERE id_sensor_potassio = :1", (id_sensor_potassio,)
     )
     conn.commit()
+
+# Novas funções de remoção para as novas tabelas
+def remover_sensor_temperatura(id_sensor: int):
+    cursor.execute("DELETE FROM SENSOR_TEMPERATURA WHERE id_sensor_temperatura = :1", (id_sensor,))
+    conn.commit()
+
+def remover_sensor_umidade(id_sensor: int):
+    cursor.execute("DELETE FROM SENSOR_UMIDADE WHERE id_sensor_umidade = :1", (id_sensor,))
+    conn.commit()
+
 
 
 # --------------------------------------------------------------------------
@@ -213,7 +269,9 @@ def escolher_sensor() -> int:
     print("""\n--- Sensores ---
 1 – pH
 2 – Fósforo
-3 – Potássio""")
+3 – Potássio
+4 – Temperatura
+5 – Umidade""")
     return ler_int("Escolha o sensor: ")
 
 
@@ -231,6 +289,10 @@ def inserir_dados_cli():
         inserir_sensor_fosforo(valor, status, loc)
     elif sensor == 3:
         inserir_sensor_potassio(valor, status, loc)
+    elif sensor == 4:
+        inserir_sensor_temperatura(valor, status, loc)
+    elif sensor == 5:
+        inserir_sensor_umidade(valor, status, loc)
     else:
         print("Sensor inválido!")
     input("\nDados gravados. Pressione ENTER…")
@@ -240,7 +302,13 @@ def inserir_dados_cli():
 
 def consultar_dados_cli():
     sensor = escolher_sensor()
-    tabelas = {1: "SENSOR_PH", 2: "SENSOR_FOSFORO", 3: "SENSOR_POTASSIO"}
+    tabelas = {
+        1: "SENSOR_PH",
+        2: "SENSOR_FOSFORO",
+        3: "SENSOR_POTASSIO",
+        4: "SENSOR_TEMPERATURA",
+        5: "SENSOR_UMIDADE"
+    }
     tabela = tabelas.get(sensor)
     if not tabela:
         print("Sensor inválido!")
@@ -275,6 +343,10 @@ def atualizar_dados_cli():
         atualizar_sensor_fosforo(id_registro, novo_valor)
     elif sensor == 3:
         atualizar_sensor_potassio(id_registro, novo_valor)
+    elif sensor == 4:
+        atualizar_sensor_temperatura(id_registro, novo_valor)
+    elif sensor == 5:
+        atualizar_sensor_umidade(id_registro, novo_valor)
     else:
         print("Sensor inválido!")
     input("\nRegistro atualizado. Pressione ENTER…")
@@ -292,10 +364,13 @@ def remover_dados_cli():
         remover_sensor_fosforo(id_registro)
     elif sensor == 3:
         remover_sensor_potassio(id_registro)
+    elif sensor == 4:
+        remover_sensor_temperatura(id_registro)
+    elif sensor == 5:
+        remover_sensor_umidade(id_registro)
     else:
         print("Sensor inválido!")
     input("\nRegistro removido. Pressione ENTER…")
-
 
 # Função nova para Exportar Dados
 def exportar_para_csv(tabela: str):
