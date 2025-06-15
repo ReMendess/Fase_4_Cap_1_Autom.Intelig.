@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from simular_dados.py import simular_dados_sensores
+from simulador_dados import gerar_dados_sensores
 
 def mostrar_pagina_exploratoria():
     st.title("🔎 Análise Exploratória dos Dados de Sensores")
 
-    df = simular_dados_sensores()
+    df = gerar_dados_sensores()
     st.subheader("Amostra dos Dados")
     st.dataframe(df.head())
 
@@ -30,4 +30,3 @@ def mostrar_pagina_exploratoria():
     fig, ax = plt.subplots()
     sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm", ax=ax)
     st.pyplot(fig)
-
