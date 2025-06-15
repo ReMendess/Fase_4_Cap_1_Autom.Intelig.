@@ -17,6 +17,11 @@ st.header("Modelo de Predição de Irrigação")
 # Preparar os dados para o modelo
 # Focaremos nos dados de umidade como principal preditor
 # Filtrar o DataFrame com base no sensor selecionado
+
+# Opção para selecionar o sensor
+sensores_unicos = df['Sensor'].unique().tolist()
+sensor_selecionado = st.sidebar.multiselect('Selecione o(s) Sensor(es)', sensores_unicos, default=sensores_unicos)
+
 df_filtrado = df[df['Sensor'].isin(sensor_selecionado)]
 df_umidade_filtered = df_filtrado[df_filtrado['Sensor'] == 'Umidade'].copy()
 
