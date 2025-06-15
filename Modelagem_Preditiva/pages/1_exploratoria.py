@@ -11,3 +11,4 @@ st.subheader("Amostra dos Dados")
 st.dataframe(df.head())
 
 st.write(f"O DataFrame tem {df.shape[0]} linhas e {df.shape[1]} colunas.")
+df.drop(df.column["Data/Hora"], index = true
