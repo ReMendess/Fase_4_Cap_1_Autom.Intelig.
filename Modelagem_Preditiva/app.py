@@ -1,15 +1,13 @@
-
+# app.py
 import streamlit as st
-from pagina_1_exploratoria import mostrar_pagina_exploratoria
-from pagina_2_modelo import mostrar_pagina_modelo
-
-st.set_page_config(page_title="Monitoramento de Sensores", layout="wide")
-
-paginas = {
-    "Análise Exploratória": mostrar_pagina_exploratoria,
-    "Análise Preditiva": mostrar_pagina_modelo
-}
-
-pagina = st.sidebar.radio("Escolha a página:", list(paginas.keys()))
-paginas[pagina]()
-
+st.set_page_config(
+    page_title='Aplicação de Análise e Predição',
+    layout='wide'
+)
+st.title('Análise das REgiões')
+st.write('Bem-vindo ao aplicativo de análise de dados agrícolas.')
+st.markdown("""
+Este aplicativo permite explorar um dataset simulado de produção agrícola,
+realizar análises exploratórias e aplicar modelos preditivos.
+Utilize o menu à esquerda para navegar entre as páginas.
+""")
