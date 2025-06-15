@@ -29,7 +29,7 @@ st.subheader("Estatísticas Descritivas")
 st.write(df.describe(include='all'))
 
 # Para facilitar análise, pivotar os dados de "Variável" e "Valor"
-df_pivot = df.pivot_table(index=["DataHora", "Zona", "Status"], columns="Variável", values="Valor").reset_index()
+df_pivot = df.pivot_table(index=["DataHora", "Zona", "Status"], columns="Variavel", values="Valor").reset_index()
 
 st.subheader("Dados pivotados (colunas por variável)")
 st.dataframe(df_pivot.head())
