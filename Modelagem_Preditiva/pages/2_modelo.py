@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from simular_dados import simular_dados_sensores
+from sklearn.metrics import accuracy_score, classification_report
 
 
 st.set_page_config(page_title='Modelo de Risco de Deslizamento', layout='wide')
@@ -11,80 +12,61 @@ st.title('Modelagem Preditiva de Risco de Deslizamento')
 
 df = simular_dados_sensores()
 
-# Mapear colunas categóricas
-df['Chuva'] = df['Chuva'].map({'Sem chuva': 0, 'Chovendo': 1})
-df['Tipo de Solo'] = df['Tipo de Solo'].map({'Arenoso': 2, 'Argiloso': 1, 'Rochoso': 0})
-df['Inclinação'] = df['Inclinação'].map({'Leve': 0, 'Moderada': 1, 'Forte': 2})
-df['Região'] = df['Região'].map({'A': 0, 'B': 1, 'C': 2, 'D': 3})
+st.header("Modelo de Predição de Irrigação")
 
-df.drop(columns=['Nivel de Risco'], inplace=True)  # Remover a variável de apoio
+# Preparar os dados para o modelo
+# Focaremos nos dados de umidade como principal preditor
+# Filtrar o DataFrame com base no sensor selecionado
+df_filtrado = df[df['Sensor'].isin(sensor_selecionado)]
+df_umidade_filtered = df_filtrado[df_filtrado['Sensor'] == 'Umidade'].copy()
 
-st.sidebar.title('Filtros de Dados')
-st.sidebar.subheader('Intervalos das Variáveis Numéricas')
+if not df_umidade_filtered.empty:
+    # Definir um limiar para a necessidade de irrigação (exemplo: umidade < 60%)
+    # Isso é um exemplo, o limiar ideal dependeria do tipo de cultura e solo.
+    umidade_limiar = st.slider("Defina o limiar de Umidade (%) para Irrigação", 0.0, 100.0, 60.0)
+    df_umidade_filtered['Necessidade_Irrigacao'] = (df_umidade_filtered['Valor Registrado'] < umidade_limiar).astype(int)
 
-temp_min, temp_max = st.sidebar.slider('Temperatura (°C):', float(df['Temperatura'].min()), float(df['Temperatura'].max()), (float(df['Temperatura'].min()), float(df['Temperatura'].max())))
-umid_min, umid_max = st.sidebar.slider('Umidade (%):', float(df['Umidade'].min()), float(df['Umidade'].max()), (float(df['Umidade'].min()), float(df['Umidade'].max())))
-vib_min, vib_max = st.sidebar.slider('Vibração:', float(df['Vibração'].min()), float(df['Vibração'].max()), (float(df['Vibração'].min()), float(df['Vibração'].max())))
+    st.write(f"Baseado em um limiar de umidade abaixo de {umidade_limiar}%, a necessidade de irrigação foi definida.")
 
-df_filtered = df[
-    (df['Temperatura'] >= temp_min) & (df['Temperatura'] <= temp_max) &
-    (df['Umidade'] >= umid_min) & (df['Umidade'] <= umid_max) &
-    (df['Vibração'] >= vib_min) & (df['Vibração'] <= vib_max)
-]
+    # Selecionar features e target
+    # Para um modelo simples, usaremos apenas a umidade, mas em um cenário real,
+    # outros fatores como temperatura, tipo de solo e cultura seriam importantes.
+    X = df_umidade_filtered[['Valor Registrado']]
+    y = df_umidade_filtered['Necessidade_Irrigacao']
 
-if df_filtered.empty:
-    st.warning('Nenhum dado corresponde aos filtros selecionados.')
-    st.stop()
+    if len(y.unique()) > 1: # Garantir que há mais de uma classe (necessita e não necessita)
+        # Dividir os dados em treino e teste
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-st.subheader('Amostra dos Dados Filtrados')
-st.dataframe(df_filtered.head())
+        # Treinar o modelo (Random Forest Classifier como exemplo)
+        st.subheader("Treinando o Modelo")
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
 
-X = df_filtered.drop(columns=['Risco'])
-y = df_filtered['Risco']
+        # Fazer previsões no conjunto de teste
+        y_pred = model.predict(X_test)
 
-# Checar se tem dados suficientes
-if len(X) < 2:
-    st.warning('Poucos dados para treinar. Ajuste os filtros.')
-    st.stop()
+        # Avaliar o modelo
+        st.subheader("Avaliação do Modelo")
+        accuracy = accuracy_score(y_test, y_pred)
+        st.write(f"Acurácia do modelo: {accuracy:.2f}")
 
-# Treinamento
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-model = RandomForestRegressor(
-    n_estimators=100,         # padrão ótimo para maioria dos casos
-    max_depth=10,             # evita árvores profundas demais
-    min_samples_leaf=5,       # impede que folhas tenham só 1 amostra
-    max_features='sqrt',      # boa prática para diminuir overfitting
-    random_state=42
-)
-model.fit(X_train, y_train)
-score = model.score(X_test, y_test)
-st.write(f'**Acurácia (R²):** {score:.2f}')
+        st.text("Relatório de Classificação:")
+        report = classification_report(y_test, y_pred)
+        st.text(report)
 
-importances = pd.Series(model.feature_importances_, index=X.columns)
-st.subheader('Importância das Variáveis')
-st.bar_chart(importances.sort_values(ascending=False))
+        # Fazer uma previsão para um novo valor de umidade
+        st.subheader("Prever Necessidade de Irrigação para um novo valor de Umidade")
+        novo_umidade = st.number_input("Insira um novo valor de Umidade (%)", min_value=0.0, max_value=100.0, value=55.0)
+        previsao = model.predict([[novo_umidade]])
 
-y_pred = model.predict(X_test)
-fig, ax = plt.subplots()
-ax.scatter(y_test, y_pred, alpha=0.7)
-ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-ax.set_xlabel('Valor Real')
-ax.set_ylabel('Predito')
-ax.set_title('Previsão vs Real')
-st.pyplot(fig)
+        if previsao[0] == 1:
+            st.warning("PREVISÃO: Necessidade de Irrigação!")
+        else:
+            st.success("PREVISÃO: Não há Necessidade de Irrigação.")
 
+    else:
+        st.warning("Dados insuficientes para treinar o modelo. Certifique-se de que há registros de umidade acima e abaixo do limiar.")
 
-r2_treino = model.score(X_train, y_train)
-r2_teste = model.score(X_test, y_test)
-
-st.write(f"R² Treino: {r2_treino:.2f}")
-st.write(f"R² Teste: {r2_teste:.2f}")
-
-y_train_pred = model.predict(X_train)
-y_test_pred = model.predict(X_test)
-
-mae_train = mean_absolute_error(y_train, y_train_pred)
-mae_test = mean_absolute_error(y_test, y_test_pred)
-
-st.write(f"MAE treino: {mae_train:.2f}")
-st.write(f"MAE teste: {mae_test:.2f}")
+else:
+    st.warning("Nenhum dado de umidade disponível para treinamento do modelo.")
