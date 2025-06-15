@@ -8,11 +8,9 @@ from sklearn.metrics import accuracy_score, classification_report
 
 
 st.set_page_config(page_title='Modelo de Risco de Deslizamento', layout='wide')
-st.title('Modelagem Preditiva de Risco de Deslizamento')
+st.title('Modelagem de Predição de Irrigação')
 
 df = simular_dados_sensores()
-
-st.header("Modelo de Predição de Irrigação")
 
 # Preparar os dados para o modelo
 # Focaremos nos dados de umidade como principal preditor
