@@ -26,7 +26,7 @@ st.title("Análise com Agregação por Período")
 df = simular_dados_sensores()  # sua função que retorna o DataFrame
 
 # Converter DataHora para datetime
-df['Data/Hora'] = pd.to_datetime(df['DataHora'])
+df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
 
 # Criar coluna de período por hora
 df['DataHora_Hora'] = df['DataHora'].dt.floor('H')
