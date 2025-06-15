@@ -4,29 +4,35 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from simular_dados import simular_dados_sensores
 
-def mostrar_pagina_exploratoria():
-    st.title(" Análise Exploratória dos Dados de Sensores")
+st.title(" Análise Exploratória dos Dados de Sensores")
 
-    df = simular_dados_sensores()
-    st.subheader("Amostra dos Dados")
-    st.dataframe(df.head())
+df = simular_dados_sensores()
+st.subheader("Amostra dos Dados")
+st.dataframe(df.head())
 
-    st.subheader("Distribuição de Temperatura e Umidade")
-    col1, col2 = st.columns(2)
+st.title("Analise de dados")
+st.subheader("Visualização dos dados")
+st.dataframe(df.tail())
 
-    with col1:
-        fig, ax = plt.subplots()
-        sns.histplot(df["Temperatura"], kde=True, ax=ax)
-        ax.set_title("Distribuição de Temperatura")
-        st.pyplot(fig)
+linhas, colunas = df.shape
+st.write(f"o data frame possui {linhas} linhas e {colunas} colunas")
+df_types = pd.DataFrame({
+    'Coluna': df.columns,
+    'Tipos de Dados': df.dtypes.astype(str)
+})
 
-    with col2:
-        fig, ax = plt.subplots()
-        sns.histplot(df["Umidade"], kde=True, ax=ax)
-        ax.set_title("Distribuição de Umidade")
-        st.pyplot(fig)
+st.write(df_types)
+# Verificar valores ausentes
+st.subheader('Valores Ausentes')
+st.write(df.isnull().sum())
+st.write("Analise descritiva dos dados:")
+st.write(df.describe())
 
-    st.subheader("Correlação entre Variáveis")
-    fig, ax = plt.subplots()
-    sns.heatmap(df.corr(numeric_only=True), annot=True, cmap="coolwarm", ax=ax)
-    st.pyplot(fig)
+
+print(df.columns)
+
+st.title("Matriz de correlação")
+correlacao = df.corr()
+fig, ax = plt.subplots(figsize=(10, 8))
+sns.heatmap(correlacao, annot=True, cmap='coolwarm', ax=ax)
+st.pyplot(fig)
