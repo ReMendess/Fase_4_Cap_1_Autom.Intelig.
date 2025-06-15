@@ -16,11 +16,6 @@ st.write(f"O DataFrame tem {df.shape[0]} linhas e {df.shape[1]} colunas.")
 st.subheader("Estatísticas Descritivas")
 st.write(df.describe())
 
-# Filtrar dados de Temperatura
-temp = df[df['Variavel'] == 'Temperatura']
-
-# Filtrar dados de Umidade
-umid = df[df['Variavel'] == 'Umidade']
 
 # Gráfico Temperatura ao longo do tempo (últimos 100 registros)
 st.subheader("Temperatura ao longo do tempo")
