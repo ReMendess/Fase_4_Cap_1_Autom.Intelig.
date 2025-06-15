@@ -16,13 +16,13 @@ def mostrar_pagina_exploratoria():
 
     with col1:
         fig, ax = plt.subplots()
-        sns.histplot(df["temperatura"], kde=True, ax=ax)
+        sns.histplot(df["Temperatura"], kde=True, ax=ax)
         ax.set_title("Distribuição de Temperatura")
         st.pyplot(fig)
 
     with col2:
         fig, ax = plt.subplots()
-        sns.histplot(df["umidade"], kde=True, ax=ax)
+        sns.histplot(df["Umidade"], kde=True, ax=ax)
         ax.set_title("Distribuição de Umidade")
         st.pyplot(fig)
 
