@@ -4,10 +4,8 @@ st.set_page_config(
     page_title='Aplicação de Análise e Predição',
     layout='wide'
 )
-st.title('Análise das REgiões')
-st.write('Bem-vindo ao aplicativo de análise de dados agrícolas.')
+st.title('Aplicação de Análise e Predição')
+st.write('Aplicativo de análise de dados agrícolas, com base em dados simulados.')
 st.markdown("""
-Este aplicativo permite explorar um dataset simulado de produção agrícola,
-realizar análises exploratórias e aplicar modelos preditivos.
-Utilize o menu à esquerda para navegar entre as páginas.
+Desenvolvemos essa aplicação para realizar uma análise exploratória dos dados, e aplicar um modelo de machine learning, para prever a necessidade de irrigação, usando como os valores captados nos sensores.
 """)
