@@ -30,7 +30,7 @@ variaveis_y = ['Valor Registrado']
 y_axis = st.sidebar.selectbox('Selecione a variável para o Eixo Y', variaveis_y)
 
 # Opção para selecionar o tipo de gráfico
-tipo_grafico = st.sidebar.selectbox('Selecione o tipo de gráfico', ['Linha', 'Dispersão', 'Barra', 'Boxplot', 'Violinplot'])
+tipo_grafico = st.sidebar.selectbox('Selecione o tipo de gráfico', ['Linha', 'Dispersão', 'Barra', 'Boxplot')
 
 # Opção para selecionar o sensor
 sensores_unicos = df['Sensor'].unique().tolist()
@@ -40,7 +40,7 @@ sensor_selecionado = st.sidebar.multiselect('Selecione o(s) Sensor(es)', sensore
 df_filtrado = df[df['Sensor'].isin(sensor_selecionado)]
 
 # Opção para agrupar dados (útil para gráficos de barra, boxplot, violinplot)
-if tipo_grafico in ['Barra', 'Boxplot', 'Violinplot']:
+if tipo_grafico in ['Barra', 'Boxplot']:
     agrupar_por = st.sidebar.selectbox('Agrupar por', ['Sensor', 'Status do Sensor', 'Local do Sensor', None])
 else:
     agrupar_por = None
@@ -78,14 +78,6 @@ if not df_filtrado.empty:
         else:
             sns.boxplot(data=df_filtrado, x=x_axis, y=y_axis)
         plt.xticks(rotation=45)
-
-    elif tipo_grafico == 'Violinplot':
-        if agrupar_por:
-            sns.violinplot(data=df_filtrado, x=x_axis, y=y_axis, hue=agrupar_por)
-        else:
-            sns.violinplot(data=df_filtrado, x=x_axis, y=y_axis)
-        plt.xticks(rotation=45)
-
 
     plt.title(f'Relação entre {x_axis} e {y_axis}')
     plt.xlabel(x_axis)
