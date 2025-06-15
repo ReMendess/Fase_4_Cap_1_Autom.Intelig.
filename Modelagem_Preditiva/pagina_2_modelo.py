@@ -3,12 +3,12 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
-from simulador_dados import gerar_dados_sensores
+from simular_dados import simular_dados_sensores
 
 def mostrar_pagina_modelo():
     st.title(" Análise Preditiva - Necessidade de Irrigação")
 
-    df = gerar_dados_sensores()
+    df = simular_dados_sensores()
 
     # Criando a coluna-alvo
     df["precisa_irrigar"] = ((df["umidade"] < 50) & (df["temperatura"] > 30)).astype(int)
