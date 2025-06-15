@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from simulador_dados import gerar_dados_sensores
+from simular_dados import simular_dados_sensores
 
 def mostrar_pagina_exploratoria():
-    st.title("🔎 Análise Exploratória dos Dados de Sensores")
+    st.title(" Análise Exploratória dos Dados de Sensores")
 
-    df = gerar_dados_sensores()
+    df = simular_dados_sensores()
     st.subheader("Amostra dos Dados")
     st.dataframe(df.head())
 
