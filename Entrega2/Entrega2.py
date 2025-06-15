@@ -1,6 +1,7 @@
 import os
 import sys
 from datetime import datetime
+import csv
 
 import oracledb
 
@@ -235,7 +236,7 @@ def inserir_dados_cli():
     input("\nDados gravados. Pressione ENTER…")
 
 
-# Consultar
+# Consultar - Atualizado para permitir a exportação dos dados.
 
 def consultar_dados_cli():
     sensor = escolher_sensor()
@@ -245,12 +246,19 @@ def consultar_dados_cli():
         print("Sensor inválido!")
         input("Pressione ENTER…")
         return
+
     dados = consultar(tabela)
     if not dados:
         print("\nNão há registros.")
     else:
         for linha in dados:
             print(linha)
+
+    print("\nDeseja exportar os dados para CSV?")
+    opcao = input("Digite S para sim, qualquer outra tecla para não: ").strip().lower()
+    if opcao == "s":
+        exportar_para_csv(tabela)
+
     input("\nPressione ENTER…")
 
 
@@ -287,6 +295,27 @@ def remover_dados_cli():
     else:
         print("Sensor inválido!")
     input("\nRegistro removido. Pressione ENTER…")
+
+
+# Função nova para Exportar Dados
+def exportar_para_csv(tabela: str):
+    dados = consultar(tabela)
+    if not dados:
+        print("Nenhum dado encontrado para exportar.")
+        return
+
+    nomes_colunas = [col[0] for col in cursor.description]
+    nome_arquivo = f"{tabela}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+
+    try:
+        with open(nome_arquivo, mode="w", newline="", encoding="utf-8") as arquivo_csv:
+            writer = csv.writer(arquivo_csv)
+            writer.writerow(nomes_colunas)
+            writer.writerows(dados)
+        print(f"Arquivo CSV salvo com sucesso: {nome_arquivo}")
+    except Exception as e:
+        print(f"Erro ao salvar CSV: {e}")
+
 
 
 # ---------------------------------------------------------------------------
