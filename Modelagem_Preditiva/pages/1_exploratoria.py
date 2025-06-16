@@ -41,17 +41,6 @@ plt.xticks(rotation=45)
 plt.title('Umidade Média ao Longo dos Dias')
 st.pyplot(fig)
 
-
-df_umidade = df[df['Sensor'] == 'Umidade']
-
-st.subheader("Distribuição de Umidade por Região")
-fig, ax = plt.subplots(figsize=(10, 5))
-sns.boxplot(data=df_umidade, x='Local do Sensor', y='Valor Registrado', palette='Blues', ax=ax)
-plt.ylabel('Umidade (%)')
-plt.title('Distribuição de Umidade por Região')
-plt.xticks(rotation=30)
-st.pyplot(fig)
-
 df_umidade = df[df['Sensor'] == 'Umidade']
 
 st.subheader("Distribuição dos Valores de Umidade")
