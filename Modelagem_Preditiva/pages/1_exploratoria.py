@@ -22,7 +22,7 @@ df['Mês'] = df['Data/Hora'].dt.month_name()
 st.sidebar.header('Configurações do Gráfico')
 
 # Opções de variáveis para o eixo X
-variaveis_x = ['Hora', 'Dia da Semana', 'Mês', 'Local do Sensor']
+variaveis_x = ['Data/Hora', 'Hora', 'Dia da Semana', 'Mês', 'Status do Sensor', 'Local do Sensor']
 x_axis = st.sidebar.selectbox('Selecione a variável para o Eixo X', variaveis_x)
 
 # Opções de variáveis para o eixo Y (apenas variáveis numéricas ou agregadas)
