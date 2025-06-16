@@ -16,7 +16,7 @@ def simular_dados_sensores(n_samples=1000):
     time.sleep(1)
     print("Simulando dados dos sensores...")
 
-    # Simular datas ao longo do ano
+    # Vamos simular dados ao longo do ano
     data_base = datetime.now().replace(month=1, day=1)
     data_hora = [
         data_base + timedelta(days=np.random.randint(0, 365), hours=np.random.randint(0, 24), minutes=np.random.randint(0, 60))
@@ -25,7 +25,7 @@ def simular_dados_sensores(n_samples=1000):
     data_hora = sorted(data_hora)
     meses = [dt.month for dt in data_hora]
 
-    # Sazonalidade: temperatura e umidade
+    # Adicionando sazonalidade
     def temperatura_sazonal(mes):
         return np.random.normal(loc=25 + 5 * np.cos((mes - 1) * np.pi / 6), scale=2)
 
@@ -37,14 +37,14 @@ def simular_dados_sensores(n_samples=1000):
     temperatura = np.array([temperatura_sazonal(m) for m in meses])
     umidade = np.array([umidade_sazonal(m, temp) for m, temp in zip(meses, temperatura)])
 
-    # pH afetado pela umidade (mais umidade, pH ligeiramente mais ácido)
+    # Vamos adicionar o efeito onde com mais umidade o pH é mais ácido
     ph = np.random.normal(loc=6.8 - 0.01 * umidade, scale=0.15)
 
-    # Fósforo afetado pela umidade e pH extremos (muito baixo ou alto → disponibilidade menor)
+    # Fósforo afetado pela umidade e pH extremos
     fosforo = 45 - 0.1 * umidade - 8 * np.abs(ph - 6.5)
     fosforo += np.random.normal(loc=0, scale=3, size=n_samples)
 
-    # Potássio levemente impactado pela temperatura e umidade
+    # Potássio será impactado pela temperatura e umidade
     potassio = 150 + 0.5 * temperatura - 0.2 * umidade + np.random.normal(loc=0, scale=10, size=n_samples)
 
     status = np.random.choice(['Ativo', 'Inativo', 'Manutenção'], size=n_samples, p=[0.8, 0.1, 0.1])
