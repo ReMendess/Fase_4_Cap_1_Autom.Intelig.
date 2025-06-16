@@ -29,7 +29,7 @@ x_axis = st.sidebar.selectbox('Selecione a variável para o Eixo X', variaveis_x
 # Opções de variáveis para o eixo Y (apenas variáveis numéricas ou agregadas)
 # Filtra os dados de cada sensor
 
-variaveis_y = ['Valor Registrado', media_temp_geral, media_umid_geral]
+variaveis_y = ['Valor Registrado']
 y_axis = st.sidebar.selectbox('Selecione a variável para o Eixo Y', variaveis_y)
 
 # Opção para selecionar o tipo de gráfico
