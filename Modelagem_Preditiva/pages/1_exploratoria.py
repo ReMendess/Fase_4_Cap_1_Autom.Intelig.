@@ -30,7 +30,7 @@ variaveis_y = ['Valor Registrado']
 y_axis = st.sidebar.selectbox('Selecione a variável para o Eixo Y', variaveis_y)
 
 # Opção para selecionar o tipo de gráfico
-tipo_grafico = st.sidebar.selectbox('Selecione o tipo de gráfico', ['Linha', 'Dispersão', 'Barra', 'Boxplot')
+tipo_grafico = st.sidebar.selectbox('Selecione o tipo de gráfico', ['Linha', 'Dispersão', 'Barra', 'Boxplot'])
 
 # Opção para selecionar o sensor
 sensores_unicos = df['Sensor'].unique().tolist()
