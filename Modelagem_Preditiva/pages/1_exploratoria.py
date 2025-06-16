@@ -26,7 +26,7 @@ df_umidade['Data'] = df_umidade['Data/Hora'].dt.date
 
 media_diaria_umidade = df_umidade.groupby('Data')['Valor Registrado'].mean().reset_index()
 
-# Gráfico
+# Gráfico de variação da umidade
 st.subheader("Variação Diária da Umidade")
 fig, ax = plt.subplots()
 sns.lineplot(data=media_diaria_umidade, x='Data', y='Valor Registrado', ax=ax)
@@ -49,14 +49,14 @@ plt.legend()
 st.pyplot(fig)
 
 
-# Filtra os sensores de interesse
+# Filtrando os sensores
 sensores_desejados = ['Temperatura', 'Umidade', 'pH', 'Potássio', 'Fósforo']
 df_corr = df[df['Sensor'].isin(sensores_desejados)]
 
-# Cria uma tabela onde cada linha representa uma data/hora e cada coluna um sensor
+# Cria uma df onde cada linha representa uma data/hora e cada coluna um sensor
 df_pivot = df_corr.pivot_table(index='Data/Hora', columns='Sensor', values='Valor Registrado')
 
-# Remove linhas com valores ausentes
+# Removendo linhas com valores ausentes
 df_pivot = df_pivot.dropna()
 
 # Calcula a correlação
@@ -72,6 +72,7 @@ st.pyplot(fig)
 # Garante que a coluna 'Data/Hora' é do tipo datetime
 df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
 
+# Gráfico Personalizado / Escolhido pelo Usuário
 # Extrai componentes de data e hora para análise
 df['Hora'] = df['Data/Hora'].dt.hour
 df['Dia da Semana'] = df['Data/Hora'].dt.day_name()
@@ -91,10 +92,10 @@ tipo_grafico = st.sidebar.selectbox('Selecione o tipo de gráfico', ['Linha', 'D
 sensores_unicos = df['Sensor'].unique().tolist()
 sensor_selecionado = st.sidebar.multiselect('Selecione o(s) Sensor(es)', sensores_unicos, default=sensores_unicos)
 
-# Filtrar o DataFrame com base no sensor selecionado
+# Filtrar o df com base no sensor selecionado
 df_filtrado = df[df['Sensor'].isin(sensor_selecionado)]
 
-# Opção para agrupar dados (útil para gráficos de barra, boxplot, violinplot)
+# Opção para agrupar dados para gráficos de barra e boxplot
 if tipo_grafico in ['Barra', 'Boxplot']:
     agrupar_por = st.sidebar.selectbox('Agrupar por', ['Sensor', 'Local do Sensor', None])
 else:
