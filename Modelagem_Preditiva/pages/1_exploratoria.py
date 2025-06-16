@@ -11,10 +11,22 @@ st.subheader("Amostra dos Dados")
 st.dataframe(df.head())
 
 st.write(f"O DataFrame tem {df.shape[0]} linhas e {df.shape[1]} colunas.")
+
+# Calcula a média por tipo de sensor
+medias_por_sensor = df.groupby('Sensor')['Valor Registrado'].mean().reset_index()
+
+# Renomeia a coluna para melhor visualização
+medias_por_sensor.columns = ['Sensor', 'Média dos Valores']
+
+# Arredonda os valores para 2 casas decimais
+medias_por_sensor['Média dos Valores'] = medias_por_sensor['Média dos Valores'].round(2)
+
+# Exibe no Streamlit como uma tabela
+st.subheader("Médias Gerais por Tipo de Sensor")
+st.table(medias_por_sensor)
+
 # Garante que a coluna 'Data/Hora' é do tipo datetime
 df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
-
-st.write(df.describe())
 
 # Extrai componentes de data e hora para análise
 df['Hora'] = df['Data/Hora'].dt.hour
