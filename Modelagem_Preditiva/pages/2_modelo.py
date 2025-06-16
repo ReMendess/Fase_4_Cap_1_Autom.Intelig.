@@ -2,74 +2,45 @@ import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
 from simular_dados import simular_dados_sensores
-from sklearn.metrics import accuracy_score, classification_report
 
+st.set_page_config(page_title='Previsão de Irrigação', layout='wide')
+st.title('Modelo Simples de Necessidade de Irrigação')
 
-st.set_page_config(page_title='Modelo de Risco de Deslizamento', layout='wide')
-st.title('Modelagem de Predição de Irrigação')
-
+# Simular dados
 df = simular_dados_sensores()
 
-# Preparar os dados para o modelo
-# Focaremos nos dados de umidade como principal preditor
-# Filtrar o DataFrame com base no sensor selecionado
+# Filtrar apenas os dados de umidade
+df_umidade = df[df['Sensor'] == 'Umidade'].copy()
 
-# Opção para selecionar o sensor
-sensores_unicos = df['Sensor'].unique().tolist()
-sensor_selecionado = st.sidebar.multiselect('Selecione o(s) Sensor(es)', sensores_unicos, default=sensores_unicos)
+# Definir limiar
+limiar = st.slider("Limiar de Umidade para Irrigação (%)", 0.0, 100.0, 60.0)
 
-df_filtrado = df[df['Sensor'].isin(sensor_selecionado)]
-df_umidade_filtered = df_filtrado[df_filtrado['Sensor'] == 'Umidade'].copy()
+# Criar target binário
+df_umidade['Necessita_Irrigacao'] = (df_umidade['Valor Registrado'] < limiar).astype(int)
 
-if not df_umidade_filtered.empty:
-    # Definir um limiar para a necessidade de irrigação (exemplo: umidade < 60%)
-    # Isso é um exemplo, o limiar ideal dependeria do tipo de cultura e solo.
-    umidade_limiar = st.slider("Defina o limiar de Umidade (%) para Irrigação", 0.0, 100.0, 60.0)
-    df_umidade_filtered['Necessidade_Irrigacao'] = (df_umidade_filtered['Valor Registrado'] < umidade_limiar).astype(int)
+# Separar features e target
+X = df_umidade[['Valor Registrado']]
+y = df_umidade['Necessita_Irrigacao']
 
-    st.write(f"Baseado em um limiar de umidade abaixo de {umidade_limiar}%, a necessidade de irrigação foi definida.")
+# Garantir que há pelo menos duas classes
+if len(y.unique()) > 1:
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Selecionar features e target
-    # Para um modelo simples, usaremos apenas a umidade, mas em um cenário real,
-    # outros fatores como temperatura, tipo de solo e cultura seriam importantes.
-    X = df_umidade_filtered[['Valor Registrado']]
-    y = df_umidade_filtered['Necessidade_Irrigacao']
+    model = RandomForestClassifier(n_estimators=50, random_state=42)
+    model.fit(X_train, y_train)
 
-    if len(y.unique()) > 1: # Garantir que há mais de uma classe (necessita e não necessita)
-        # Dividir os dados em treino e teste
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    acc = accuracy_score(y_test, model.predict(X_test))
+    st.metric("Acurácia do Modelo", f"{acc:.2%}")
 
-        # Treinar o modelo (Random Forest Classifier como exemplo)
-        st.subheader("Treinando o Modelo")
-        model = RandomForestClassifier(n_estimators=100, random_state=42)
-        model.fit(X_train, y_train)
+    novo_valor = st.number_input("Novo valor de umidade (%)", min_value=0.0, max_value=100.0, value=55.0)
+    previsao = model.predict([[novo_valor]])[0]
 
-        # Fazer previsões no conjunto de teste
-        y_pred = model.predict(X_test)
-
-        # Avaliar o modelo
-        st.subheader("Avaliação do Modelo")
-        accuracy = accuracy_score(y_test, y_pred)
-        st.write(f"Acurácia do modelo: {accuracy:.2f}")
-
-        st.text("Relatório de Classificação:")
-        report = classification_report(y_test, y_pred)
-        st.text(report)
-
-        # Fazer uma previsão para um novo valor de umidade
-        st.subheader("Prever Necessidade de Irrigação para um novo valor de Umidade")
-        novo_umidade = st.number_input("Insira um novo valor de Umidade (%)", min_value=0.0, max_value=100.0, value=55.0)
-        previsao = model.predict([[novo_umidade]])
-
-        if previsao[0] == 1:
-            st.warning("PREVISÃO: Necessidade de Irrigação!")
-        else:
-            st.success("PREVISÃO: Não há Necessidade de Irrigação.")
-
+    if previsao == 1:
+        st.warning("PREVISÃO: Necessita Irrigação!")
     else:
-        st.warning("Dados insuficientes para treinar o modelo. Certifique-se de que há registros de umidade acima e abaixo do limiar.")
-
+        st.success("PREVISÃO: Não necessita Irrigação.")
 else:
-    st.warning("Nenhum dado de umidade disponível para treinamento do modelo.")
+    st.warning("Ajuste o limiar para que o modelo tenha exemplos de ambas as classes.")
+
