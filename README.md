@@ -39,9 +39,20 @@ Dessa forma o usuário consegue ter um feedback em tempo real no local de opera�
 </p>
 
 ## Serial Plotter
-Também implementamos o uso de Serial Plotter para 
+Também implementamos o uso de Serial Plotter para disponibilizar uma análise gráfica para o operador ou usuário.
+
+<p align="center">
+<img src="assets/wokwi5.png" ></a>
+</p>
+
 
 ## Otimização
+Otimizamos nosso código C, realizando a alteração do tipo de algumas variáveis, utilizando int16_t e unit8_t para economizar memória e melhorar o desempenho.
+
+<p align="center">
+<img src="assets/wokwi.png" ></a>
+</p>
+
 
 # Banco de Dados
 
