@@ -26,8 +26,8 @@ variaveis_x = ['Hora', 'Dia da Semana', 'Mês', 'Local do Sensor']
 x_axis = st.sidebar.selectbox('Selecione a variável para o Eixo X', variaveis_x)
 
 # Opções de variáveis para o eixo Y (apenas variáveis numéricas ou agregadas)
-media_temp = df['Temperatura'].mean
-media_umid = df['Umidade'].mean
+media_temp = df.groupby['Temperatura'].mean
+media_umid = df.groupby['Umidade'].mean
 variaveis_y = ['Valor Registrado', media_temp, media_umid]
 y_axis = st.sidebar.selectbox('Selecione a variável para o Eixo Y', variaveis_y)
 
