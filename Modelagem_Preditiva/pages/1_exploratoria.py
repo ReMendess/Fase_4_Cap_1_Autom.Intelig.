@@ -25,6 +25,31 @@ medias_por_sensor['Média dos Valores'] = medias_por_sensor['Média dos Valores'
 st.subheader("Médias Gerais por Tipo de Sensor")
 st.table(medias_por_sensor)
 
+
+# Filtra apenas os sensores de Temperatura e Umidade
+df_temp_umid = df[df['Sensor'].isin(['Temperatura', 'Umidade'])]
+
+# Agrupa por Local e Sensor, calculando a média dos valores registrados
+media_por_regiao = df_temp_umid.groupby(['Local do Sensor', 'Sensor'])['Valor Registrado'].mean().reset_index()
+
+# Arredonda os valores
+media_por_regiao['Valor Registrado'] = media_por_regiao['Valor Registrado'].round(2)
+
+# Gráfico de barras
+st.subheader("Média de Temperatura e Umidade por Região")
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.barplot(data=media_por_regiao, x='Local do Sensor', y='Valor Registrado', hue='Sensor', palette='coolwarm', ax=ax)
+
+plt.ylabel('Média dos Valores')
+plt.xlabel('Região')
+plt.title('Temperatura e Umidade por Região')
+plt.xticks(rotation=30)
+plt.legend(title='Sensor')
+plt.tight_layout()
+
+st.pyplot(fig)
+
+
 # Garante que a coluna 'Data/Hora' é do tipo datetime
 df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
 
