@@ -11,9 +11,10 @@ st.subheader("Amostra dos Dados")
 st.dataframe(df.head())
 
 st.write(f"O DataFrame tem {df.shape[0]} linhas e {df.shape[1]} colunas.")
-st.write(df.describe())
 # Garante que a coluna 'Data/Hora' é do tipo datetime
 df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
+
+st.write(df.describe())
 
 # Extrai componentes de data e hora para análise
 df['Hora'] = df['Data/Hora'].dt.hour
