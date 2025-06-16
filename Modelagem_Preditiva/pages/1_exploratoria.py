@@ -4,27 +4,22 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from simular_dados import simular_dados_sensores
 
-st.title("Análise Exploratória dos Dados de Sensores")
+st.title("Análise Exploratória")
 
+# Pegando um df simulado pela nossa função
 df = simular_dados_sensores()
 st.subheader("Amostra dos Dados")
 st.dataframe(df.head())
 
 st.write(f"O DataFrame tem {df.shape[0]} linhas e {df.shape[1]} colunas.")
 
-# Calcula a média por tipo de sensor
+# Calculando a média
 medias_por_sensor = df.groupby('Sensor')['Valor Registrado'].mean().reset_index()
-
-# Renomeia a coluna para melhor visualização
 medias_por_sensor.columns = ['Sensor', 'Média dos Valores']
+medias_por_sensor['Média dos Valores'] = medias_por_sensor['Média dos Valores'].round(2) # Arredonda os valores para 2 casas decimais
 
-# Arredonda os valores para 2 casas decimais
-medias_por_sensor['Média dos Valores'] = medias_por_sensor['Média dos Valores'].round(2)
-
-# Exibe no Streamlit como uma tabela
-st.subheader("Médias Gerais por Tipo de Sensor")
+st.subheader("Médias Gerais")
 st.table(medias_por_sensor)
-
 
 df_umidade = df[df['Sensor'] == 'Umidade']
 df_umidade['Data'] = df_umidade['Data/Hora'].dt.date
@@ -43,7 +38,7 @@ st.pyplot(fig)
 
 df_umidade = df[df['Sensor'] == 'Umidade']
 
-st.subheader("Distribuição dos Valores de Umidade")
+st.subheader("Distribuição de Umidade")
 fig, ax = plt.subplots()
 sns.histplot(df_umidade['Valor Registrado'], bins=30, kde=True, ax=ax)
 plt.axvline(x=40, color='red', linestyle='--', label='Limite Crítico?')
@@ -68,13 +63,11 @@ df_pivot = df_pivot.dropna()
 matriz_corr = df_pivot.corr()
 
 # Gráfico de calor
-st.subheader("Mapa de Correlação entre os Sensores")
+st.subheader("Mapa de Correlação")
 fig, ax = plt.subplots(figsize=(8, 6))
 sns.heatmap(matriz_corr, annot=True, cmap='coolwarm', center=0, linewidths=0.5, fmt=".2f")
 plt.title("Correlação entre Temperatura, Umidade, pH, Potássio e Fósforo")
 st.pyplot(fig)
-
-
 
 # Garante que a coluna 'Data/Hora' é do tipo datetime
 df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
@@ -86,13 +79,8 @@ df['Mês'] = df['Data/Hora'].dt.month_name()
 
 st.sidebar.header('Configurações do Gráfico')
 
-# Opções de variáveis para o eixo X
 variaveis_x = ['Hora', 'Dia da Semana', 'Mês', 'Local do Sensor']
 x_axis = st.sidebar.selectbox('Selecione a variável para o Eixo X', variaveis_x)
-
-# Opções de variáveis para o eixo Y (apenas variáveis numéricas ou agregadas)
-# Filtra os dados de cada sensor
-
 variaveis_y = ['Valor Registrado']
 y_axis = st.sidebar.selectbox('Selecione a variável para o Eixo Y', variaveis_y)
 
@@ -155,6 +143,3 @@ if not df_filtrado.empty:
 else:
     st.warning("Nenhum dado encontrado para o(s) sensor(es) selecionado(s).")
 
-# Exibir o DataFrame filtrado (opcional)
-st.subheader("Dados Filtrados")
-st.dataframe(df_filtrado)
