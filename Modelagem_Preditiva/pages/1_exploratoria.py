@@ -41,7 +41,7 @@ df_filtrado = df[df['Sensor'].isin(sensor_selecionado)]
 
 # Opção para agrupar dados (útil para gráficos de barra, boxplot, violinplot)
 if tipo_grafico in ['Barra', 'Boxplot']:
-    agrupar_por = st.sidebar.selectbox('Agrupar por', ['Sensor', 'Status do Sensor', 'Local do Sensor', None])
+    agrupar_por = st.sidebar.selectbox('Agrupar por', ['Sensor', 'Local do Sensor', None])
 else:
     agrupar_por = None
 
