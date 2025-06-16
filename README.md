@@ -81,12 +81,44 @@ Adicionamos também uma nova funcionalidade que permite exportar um arquivo csv 
 </p>
 
 # Análise e Predição com Streamlit
+Desenvolvemos uma aplicação com a biblioteca Scikit-learn e Streamlit.
+Realizamos o tratamento e análise dos dados. Plotamos graficos e criamos um modelo preditivo que verificar a necessidade de irrigação.
+Link da aplicação: https://fase4cap1automintelig-n3hqyyxxjbmt2qtkguk38y.streamlit.app
 
 ## Simulando Dados
+Criamos uma função de gerar dados, levando em conta alguns aspectos e correlações entre as variáveis.
+<p align="center">
+<img src="assets/simular_dados.png" ></a>
+</p>
 
 ## Análise Exploratória
+Realizamos a análise e uma exploração estatística dos dados.
+Plotamos vários graficos, e utilizando as ferramentas do Streamlit, disponibilizamos uma feature que permite o usuário plotar outro determinado gráfico.
+Apenas filtrando e escolhendo pela barra vertical no lado esquerdo.
+
+<p align="center">
+<img src="assets/analise_exp.png" ></a>
+</p>
+
+<p align="center">
+<img src="assets/analise_exp2.png" ></a>
+</p>
+
+<p align="center">
+<img src="assets/analise_exp3.png" ></a>
+</p>
 
 ## Modelo de Predição com Scikit-learn
+Utilizando os dados trabalhado e a biblioteca Scikit-learn, treinamos um modelo para apoiar na decisão de necessidade irrigação.
+O modelo leva em conta o limiar de umidade, que é um valor de referência para determinar se o solo ou ambiente está suficientemente úmido para precisar de irrigação.
+
+Exemplo:
+Se a umidade estiver abaixo do limiar, significa que está seco demais, logo precisa irrigar.
+Se a umidade estiver acima do limiar, significa que está úmido o suficiente, dessa forma não precisa irrigar.
+
+<p align="center">
+<img src="assets/modelo.png" ></a>
+</p>
 
 
 
