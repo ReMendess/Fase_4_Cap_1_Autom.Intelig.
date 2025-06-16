@@ -54,6 +54,28 @@ plt.legend()
 st.pyplot(fig)
 
 
+# Filtra os sensores de interesse
+sensores_desejados = ['Temperatura', 'Umidade', 'pH', 'Potássio', 'Fósforo']
+df_corr = df[df['Sensor'].isin(sensores_desejados)]
+
+# Cria uma tabela onde cada linha representa uma data/hora e cada coluna um sensor
+df_pivot = df_corr.pivot_table(index='Data/Hora', columns='Sensor', values='Valor Registrado')
+
+# Remove linhas com valores ausentes
+df_pivot = df_pivot.dropna()
+
+# Calcula a correlação
+matriz_corr = df_pivot.corr()
+
+# Gráfico de calor
+st.subheader("Mapa de Correlação entre os Sensores")
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.heatmap(matriz_corr, annot=True, cmap='coolwarm', center=0, linewidths=0.5, fmt=".2f")
+plt.title("Correlação entre Temperatura, Umidade, pH, Potássio e Fósforo")
+st.pyplot(fig)
+
+
+
 # Garante que a coluna 'Data/Hora' é do tipo datetime
 df['Data/Hora'] = pd.to_datetime(df['Data/Hora'])
 
