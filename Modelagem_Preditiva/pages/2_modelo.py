@@ -14,6 +14,13 @@ df = simular_dados_sensores()
 # Filtrar apenas os dados de umidade
 df_umidade = df[df['Sensor'] == 'Umidade'].copy()
 
+st.markdown("""O limiar de umidade é um valor percentual que definimos como referência para determinar se o solo ou ambiente está suficientemente úmido ou seco o bastante para precisar de irrigação.
+
+Exemplo:
+Se a umidade medida estiver abaixo de 60%, considera-se que o solo está seco e precisa ser irrigado.
+
+Se a umidade estiver acima de 60%, o solo tem umidade suficiente e não precisa de irrigação no momento.""")
+
 # Definir limiar
 limiar = st.slider("Limiar de Umidade para Irrigação (%)", 0.0, 100.0, 60.0)
 
