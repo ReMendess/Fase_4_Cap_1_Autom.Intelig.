@@ -26,27 +26,42 @@ st.subheader("Médias Gerais por Tipo de Sensor")
 st.table(medias_por_sensor)
 
 
-# Filtra apenas os sensores de Temperatura e Umidade
-df_temp_umid = df[df['Sensor'].isin(['Temperatura', 'Umidade'])]
+df_umidade = df[df['Sensor'] == 'Umidade']
+df_umidade['Data'] = df_umidade['Data/Hora'].dt.date
 
-# Agrupa por Local e Sensor, calculando a média dos valores registrados
-media_por_regiao = df_temp_umid.groupby(['Local do Sensor', 'Sensor'])['Valor Registrado'].mean().reset_index()
+media_diaria_umidade = df_umidade.groupby('Data')['Valor Registrado'].mean().reset_index()
 
-# Arredonda os valores
-media_por_regiao['Valor Registrado'] = media_por_regiao['Valor Registrado'].round(2)
+# Gráfico
+st.subheader("Variação Diária da Umidade")
+fig, ax = plt.subplots()
+sns.lineplot(data=media_diaria_umidade, x='Data', y='Valor Registrado', ax=ax)
+plt.ylabel('Umidade (%)')
+plt.xlabel('Data')
+plt.xticks(rotation=45)
+plt.title('Umidade Média ao Longo dos Dias')
+st.pyplot(fig)
 
-# Gráfico de barras
-st.subheader("Média de Temperatura e Umidade por Região")
+
+df_umidade = df[df['Sensor'] == 'Umidade']
+
+st.subheader("Distribuição de Umidade por Região")
 fig, ax = plt.subplots(figsize=(10, 5))
-sns.barplot(data=media_por_regiao, x='Local do Sensor', y='Valor Registrado', hue='Sensor', palette='coolwarm', ax=ax)
-
-plt.ylabel('Média dos Valores')
-plt.xlabel('Região')
-plt.title('Temperatura e Umidade por Região')
+sns.boxplot(data=df_umidade, x='Local do Sensor', y='Valor Registrado', palette='Blues', ax=ax)
+plt.ylabel('Umidade (%)')
+plt.title('Distribuição de Umidade por Região')
 plt.xticks(rotation=30)
-plt.legend(title='Sensor')
-plt.tight_layout()
+st.pyplot(fig)
 
+df_umidade = df[df['Sensor'] == 'Umidade']
+
+st.subheader("Distribuição dos Valores de Umidade")
+fig, ax = plt.subplots()
+sns.histplot(df_umidade['Valor Registrado'], bins=30, kde=True, ax=ax)
+plt.axvline(x=40, color='red', linestyle='--', label='Limite Crítico?')
+plt.title('Frequência dos Níveis de Umidade')
+plt.xlabel('Umidade (%)')
+plt.ylabel('Contagem')
+plt.legend()
 st.pyplot(fig)
 
 
