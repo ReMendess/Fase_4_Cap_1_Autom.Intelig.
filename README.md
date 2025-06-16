@@ -55,10 +55,30 @@ Otimizamos nosso código C, realizando a alteração do tipo de algumas variáve
 
 
 # Banco de Dados
+Aprimoramos nosso banco de dados, adicionando novas tabelas, melhorando o código e permitindo novas funcionalidades.
 
 ## Novas Tabelas
+Adicionamos duas novas tabelas: Temperatura e Umidade.
+
+<p align="center">
+<img src="assets/banco_dados5.png" ></a>
+</p>
+
 
 ## Novas Funcionalidades
+Atualizamos nossa aplicação CRUD para permitir a manipulação de dados considerando as novas tabelas.
+Adicionamos também uma nova funcionalidade que permite exportar um arquivo csv com os dados de determinado sensor.
+
+<p align="center">
+<img src="assets/banco_dados1.png" ></a>
+</p>
+
+<p align="center">
+<img src="assets/banco_dados.png" ></a>
+</p>
+<p align="center">
+<img src="assets/banco_dados3.png" ></a>
+</p>
 
 # Análise e Predição com Streamlit
 
