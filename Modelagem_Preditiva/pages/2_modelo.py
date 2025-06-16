@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 from simular_dados import simular_dados_sensores
 
 st.set_page_config(page_title='Previsão de Irrigação', layout='wide')
-st.title('Modelo Simples de Necessidade de Irrigação')
+st.title('Modelo de Necessidade de Irrigação')
 
 # Simular dados
 df = simular_dados_sensores()
@@ -26,14 +26,13 @@ Se a umidade estiver acima do limiar, significa que está úmido o suficiente �
 # Definir limiar
 limiar = st.slider("Limiar de Umidade para Irrigação (%)", 0.0, 100.0, 60.0)
 
-# Criar target binário
+# Criar target
 df_umidade['Necessita_Irrigacao'] = (df_umidade['Valor Registrado'] < limiar).astype(int)
 
 # Separar features e target
 X = df_umidade[['Valor Registrado']]
 y = df_umidade['Necessita_Irrigacao']
 
-# Garantir que há pelo menos duas classes
 if len(y.unique()) > 1:
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
