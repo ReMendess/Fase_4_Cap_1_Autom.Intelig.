@@ -17,6 +17,8 @@
 
 </div>
 
+Link do vídeo: https://youtu.be/1RKdMv_C-TU
+
 # Sensores
 
 Nessa Fase 4, aprimoramos nosso sensores. Adicionamos um display LCD, para mostrar em tempo real os valores lidos.
