@@ -53,33 +53,47 @@ else:
     st.warning("Ajuste o limiar para que o modelo tenha exemplos de ambas as classes.")
 
 # =====================
-# MODELO DE REGRESSÃO
+# MODELO DE REGRESSÃO POR REGIÃO
 # =====================
-st.header("2. Previsão da Umidade Média para os Próximos Meses")
+st.header("2. Previsão da Umidade Média Mensal por Região")
 
-# Extrair mês e calcular média histórica de umidade por mês
+# Extrair mês e região
 df_umidade['Mês'] = pd.to_datetime(df_umidade['Data/Hora']).dt.month
-media_umidade_mes = df_umidade.groupby('Mês')['Valor Registrado'].mean().reset_index()
+df_umidade['Região'] = df_umidade['Local do Sensor']
 
-# Modelo de regressão: prever umidade com base no mês
-X_reg = media_umidade_mes[['Mês']]
-y_reg = media_umidade_mes['Valor Registrado']
+# Agrupar média por mês e região
+media_por_regiao = df_umidade.groupby(['Mês', 'Região'])['Valor Registrado'].mean().reset_index()
+media_por_regiao.rename(columns={'Valor Registrado': 'Umidade Média'}, inplace=True)
 
-model_reg = RandomForestRegressor(n_estimators=100, random_state=42)
-model_reg.fit(X_reg, y_reg)
+# Lista de regiões
+regioes = media_por_regiao['Região'].unique().tolist()
 
-# Previsão para todos os meses
-meses_futuros = pd.DataFrame({'Mês': np.arange(1, 13)})
-umidade_prevista = model_reg.predict(meses_futuros)
-meses_futuros['Umidade Prevista'] = umidade_prevista
+# Criar DataFrame para guardar previsões
+previsoes_total = pd.DataFrame()
 
-# Gráfico
-st.subheader("Umidade Média Prevista por Mês")
-fig, ax = plt.subplots()
-sns.barplot(data=meses_futuros, x='Mês', y='Umidade Prevista', palette='Blues', ax=ax)
+for reg in regioes:
+    df_reg = media_por_regiao[media_por_regiao['Região'] == reg]
+    
+    X_reg = df_reg[['Mês']]
+    y_reg = df_reg['Umidade Média']
+    
+    model_reg = RandomForestRegressor(n_estimators=100, random_state=42)
+    model_reg.fit(X_reg, y_reg)
+    
+    meses = pd.DataFrame({'Mês': np.arange(1, 13)})
+    umidade_pred = model_reg.predict(meses)
+    meses['Umidade Prevista'] = umidade_pred
+    meses['Região'] = reg
+    
+    previsoes_total = pd.concat([previsoes_total, meses])
+
+# Mostrar gráfico
+st.subheader("Previsão de Umidade Média por Região (Mensal)")
+fig, ax = plt.subplots(figsize=(12, 6))
+sns.barplot(data=previsoes_total, x='Mês', y='Umidade Prevista', hue='Região')
+plt.title('Previsão de Umidade por Região e Mês')
 plt.ylabel('Umidade (%)')
 plt.xlabel('Mês')
-plt.title('Previsão da Umidade Média Mensal')
 st.pyplot(fig)
 
 
