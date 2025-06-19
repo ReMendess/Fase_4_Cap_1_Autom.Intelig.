@@ -108,10 +108,11 @@ Apenas filtrando e escolhendo pela barra vertical no lado esquerdo.
 <img src="assets/analise_exp3.png" ></a>
 </p>
 
-## Modelo de Predição com Scikit-learn
-Utilizando os dados trabalhado e a biblioteca Scikit-learn, treinamos um modelo para apoiar na decisão de necessidade irrigação.
-O modelo leva em conta o limiar de umidade, que é um valor de referência para determinar se o solo ou ambiente está suficientemente úmido para precisar de irrigação.
-
+## Modelos de Predição com Scikit-learn
+Utilizando os dados trabalhado e a biblioteca Scikit-learn, treinamos dois modelo para apoiar na decisão de necessidade irrigação.
+O primeiro modelo leva em conta o limiar de umidade, que é um valor de referência para determinar se o solo ou ambiente está suficientemente úmido para precisar de irrigação.
+Dessa forma, o modelo consegue tomar a decisão de ativar a irrigação de forma autonoma e automatica, levando em conta as medições atuais.
+Utilizamos RandomForestClassifier para classificar a necessidade de irrigação.
 Exemplo:
 Se a umidade estiver abaixo do limiar, significa que está seco demais, logo precisa irrigar.
 Se a umidade estiver acima do limiar, significa que está úmido o suficiente, dessa forma não precisa irrigar.
@@ -119,6 +120,20 @@ Se a umidade estiver acima do limiar, significa que está úmido o suficiente, d
 <p align="center">
 <img src="assets/modelo.png" ></a>
 </p>
+
+O segundo modelo utiliza RandomForestRegressor para estimar a umidade média das regiões, nos próximos 12 meses.
+Esse modelo tem uma abordagem mais estratégica e contribui na preparação, cálculo de custos, e planejamento operacional previsto para as próximas safras.
+
+<p align="center">
+<img src="assets/modelo2.png" ></a>
+</p>
+
+
+<p align="center">
+<img src="assets/modelo3.png" ></a>
+</p>
+
+
 
 
 
