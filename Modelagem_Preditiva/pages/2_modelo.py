@@ -86,6 +86,8 @@ for reg in regioes:
     
     previsoes_total = pd.concat([previsoes_total, meses])
 
+st.write(previsoes_total.head())
+
 # Mostrar gráfico
 st.subheader("Previsão de Umidade Média por Região (Mensal)")
 fig, ax = plt.subplots(figsize=(12, 6))
