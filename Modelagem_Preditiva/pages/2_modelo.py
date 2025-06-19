@@ -15,8 +15,8 @@ st.title('Modelo de Necessidade de Irrigação + Previsão de Umidade Futura')
 df = simular_dados_sensores()
 
 # ========================
-# MODELO DE CLASSIFICAÇÃO
-# ========================
+# Modelo de classificação / Irrigação
+
 st.header("1. Predição de Necessidade de Irrigação (Baseado em umidade atual)")
 
 df_umidade = df[df['Sensor'] == 'Umidade'].copy()
@@ -52,12 +52,11 @@ if len(y.unique()) > 1:
 else:
     st.warning("Ajuste o limiar para que o modelo tenha exemplos de ambas as classes.")
 
-# =====================
-# MODELO DE REGRESSÃO POR REGIÃO
-# =====================
+# Modelo de regressão por Região
+
 st.header("2. Previsão da Umidade Média Mensal por Região")
 
-# Extrair mês e região
+# Extraindo mês e região
 df_umidade['Mês'] = pd.to_datetime(df_umidade['Data/Hora']).dt.month
 df_umidade['Região'] = df_umidade['Local do Sensor']
 
