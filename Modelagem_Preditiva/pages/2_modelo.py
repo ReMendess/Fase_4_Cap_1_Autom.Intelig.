@@ -9,7 +9,7 @@ import seaborn as sns
 import numpy as np
 
 st.set_page_config(page_title='Previsão de Irrigação', layout='wide')
-st.title('Modelo de Necessidade de Irrigação + Previsão de Umidade Futura')
+st.title('Modelo de Necessidade de Irrigação e Modelo de Previsão de Umidade por Região')
 
 # Simular dados
 df = simular_dados_sensores()
@@ -17,7 +17,7 @@ df = simular_dados_sensores()
 # ========================
 # Modelo de classificação / Irrigação
 
-st.header("1. Predição de Necessidade de Irrigação (Baseado em umidade atual)")
+st.header("1. Modelo de Predição de Necessidade de Irrigação")
 
 df_umidade = df[df['Sensor'] == 'Umidade'].copy()
 
@@ -54,7 +54,7 @@ else:
 
 # Modelo de regressão por Região
 
-st.header("2. Previsão da Umidade Média Mensal por Região")
+st.header("2. Modelo de Previsão da Umidade por Região")
 
 # Extraindo mês e região
 df_umidade['Mês'] = pd.to_datetime(df_umidade['Data/Hora']).dt.month
